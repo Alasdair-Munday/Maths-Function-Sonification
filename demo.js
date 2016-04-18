@@ -7,8 +7,8 @@ angular.module('demo',['MathsFunctionSonification'])
     $scope.playgroundOut = {};
     $scope.formant = true;
 
-    $scope.xRange = 1;
-    $scope.yRange = 1;
+    $scope.xRange = 16;
+    $scope.yRange = 4;
 
     $scope.toggleFormant = function(){
         $scope.formant = !$scope.formant;
