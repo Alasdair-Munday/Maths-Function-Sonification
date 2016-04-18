@@ -1,0 +1,22 @@
+<div class="text-center">
+    <div class="function-plot"></div>
+    <div class="col-sm-4 col-sm-offset-4">
+    <div class="btn-group" ng-show="sonify">
+        <button type="button" class="btn btn-default" ng-click="reset()">
+            <span class="glyphicon glyphicon-step-backward" ></span>
+        </button>
+        <button type="button" class="btn btn-default" ng-click="stop()">
+            <span class="glyphicon glyphicon-stop"></span>
+        </button>
+        <button type="button" class="btn btn-default" ng-click="play()">
+            <span class="glyphicon glyphicon-play"></span>
+        </button>
+        <button type="button" class="btn btn-default" ng-click="pause()" >
+            <span class="glyphicon glyphicon-pause"></span>
+        </button>
+        <button type="button" class="btn btn-default" ng-model="loop" uib-btn-checkbox>
+            <span class="glyphicon glyphicon-repeat"></span>
+        </button>
+    </div>
+    </div>
+</div>
