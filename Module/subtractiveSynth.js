@@ -7,7 +7,7 @@ angular.module('MathsFunctionSonification').service('subtractiveSynth', function
     var playing = false;
     var c = {};
 
-    c.fMin = 100;
+    c.fMin = 200;
     c.fxSemitoneRatio = 24/2;
 
 
@@ -93,8 +93,6 @@ angular.module('MathsFunctionSonification').service('subtractiveSynth', function
         c.filter.frequency.value = 200 + 50*Math.abs(dx2);
         c.setFrequency(c.getPitch(fx));
     };
-
-
 
     c.start = function () {
         c.amp.gain.value = 1;
