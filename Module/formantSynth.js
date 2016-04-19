@@ -5,17 +5,15 @@
 
 angular.module('MathsFunctionSonification').service('formantSynth',function(){
 
-    var nFreq = 6;
+    var nFreq = 5;
 
     //formant database
     var formants = {
-       // w: [{F:290, BW:50},{F:610, BW:80},{F:2150, BW:60}, {F:3300,BW:250},{F:3750,BW:200},{F:4900,BW:1000}],
-       // u: [{F:350, BW:65},{F:1250, BW:110},{F:2200, BW:140}, {F:3300,BW:250},{F:3750,BW:200},{F:4900,BW:1000}],
-        //o: [{F:550, BW:80},{F:960, BW:50 },{F:2400,BW:130}, {F:3300,BW:250},{F:3750,BW:200},{F:4900,BW:1000}],
-        a: [{F:700, BW:130},{F:1220, BW:70 },{F:2500,BW:160}, {F:3300,BW:250},{F:3750,BW:200},{F:4900,BW:1000}],
-        e: [{F:480, BW:70},{F:1720, BW:100 },{F:2520,BW:200}, {F:3300,BW:250},{F:3750,BW:200},{F:4900,BW:1000}],
-        i: [{F:310, BW:45},{F:2020, BW:200},{F:2960, BW:400}, {F:3300,BW:250},{F:3750,BW:200},{F:4900,BW:1000}],
-
+        a: [{F:600, BW:60, G:1},{F:1040, BW:70, G:0.4466835922 },{F:2250,BW:110,G:0.3548133892}, {F:2450,BW:120, G:0.3548133892},{F:2750,BW:130, G:0.1}],
+        e: [{F:400, BW:40, G:1},{F:1620, BW:80, G:0.2511886432 },{F:2400,BW:100, G:0.3548133892}, {F:2800,BW:120, G:0.2511886432},{F:3100,BW:120, G:0.1258925412}],
+        i: [{F:250, BW:60, G:1},{F:1750, BW:90, G:0.0316227766},{F:2600, BW:100, G:0.1584893192}, {F:3050,BW:120, G:0.07943282347},{F:3340,BW:120, G:0.03981071706}],
+        o: [{F:400, BW:40, G:1},{F:750, BW:80, G:0.2818382931 },{F:2400,BW:100, G:0.08912509381}, {F:2600,BW:120, G:0.1},{F:2900,BW:120, G:0.01}],
+        u: [{F:350, BW:40, G:1},{F:600, BW:80, G:0.1},{F:2400, BW:100, G:0.02511886432}, {F:2675,BW:120, G:0.01},{F:2950,BW:120, G:0.01584893192}]
     };
 
     var letters = Object.keys(formants);
@@ -63,7 +61,7 @@ angular.module('MathsFunctionSonification').service('formantSynth',function(){
     vib = context.createOscillator();
     vibGain = context.createGain();
     vib.connect(vibGain);
-    vibGain.connect(source.detune);
+    //vibGain.connect(source.detune);
     vibGain.gain.value = 40;
     vib.start();
 
@@ -78,18 +76,20 @@ angular.module('MathsFunctionSonification').service('formantSynth',function(){
         filter.connect(gain);
         gain.connect(output);
 
-        filters.push(filter);
+        filters.push({filter:filter,gain:gain});
 
     }
 
-    function useFormant(f){
+    function useFormant(f, brightness){
         if( typeof f == "string") {
             f = formants[f];
         }
         for(var i = 0; i< nFreq; i++) {
             var formant = f[i];
-            var filter = filters[i];
+            var filter = filters[i].filter;
+            var gain = filters[i].gain;
             filter.frequency.value = formant.F;
+            gain.gain.value = brightness? formant.G * brightness :  formant.G;
 
             //find Q from bandwidth and cutoff frequency
             // BW = Fc / Q <=> Q = Fc / BW
@@ -114,7 +114,11 @@ angular.module('MathsFunctionSonification').service('formantSynth',function(){
     };
 
     c.setNoteRange = function(fMax,fMin,yMax,yMin){
-        c.fMin = fMin;
+        c.fMin = fMin/2;
+
+        fMax = fMax/2;
+        fMin = fMin/2;
+
         var semitones = 12*Math.log2(fMax/fMin);
 
         var yRange = yMax - yMin;
@@ -137,44 +141,47 @@ angular.module('MathsFunctionSonification').service('formantSynth',function(){
 
     c.sonifyValues = function(fx,dx,dx2){
         var f = getFormantForSlope(dx);
-        useFormant(f);
+        useFormant(f,dx2+0.5);
         setFrequency( getPitch(fx));
         vib.frequency.value = dx2*2;
     };
 
     function getFormantForSlope(slope){
         var pos = Math.abs(slope);
-        var  maxSlope = 6;
+        var  maxSlope = 8;
+
+        //stop error if out of bounds by returning highest value
         if(pos> maxSlope) {
             var l = letters[letters.length-1];
             return formants[l];
         }
 
+        //find the distance between letters
+        var fWidth = Math.floor(maxSlope / (letters.length-1));
 
-        var fWidth = Math.floor(maxSlope / letters.length);
+        //index of the letter on the left
         var idx = Math.floor(pos/fWidth);
-        var dx = pos % fWidth;
 
+        //find the formant for the letter on the left
         var l1 = letters[idx];
         var f1 = formants[l1];
 
-        var f1Dx = dx - (fWidth / 2);
-        //console.log("DX = " + f1Dx);
-        var f1W = 1 - (Math.abs(f1Dx) / fWidth);
-
-        idx+=(f1Dx<0)?-1:1;
-        if(idx<0){ idx=0;}
-        if(idx>letters.length-1){ idx=letters.length-1;}
+        //index of the letter on the right
+        idx++;
         var l2 = letters[idx];
         var f2 = formants[l2];
-        var f2W = 1 - f1W;
+
+        //find ratio of distance between the two formants
+        var dx = (pos/fWidth % 1);
+        var dx2 = 1-dx;
 
         var formant = [];
 
         for( var i = 0; i < f1.length; i++) {
             formant.push({
-                F: (f1[i].F * f1W) + (f2[i].F * f2W) ,
-                BW: (f1[i].BW * f1W) + (f2[i].BW * f2W)
+                F: f1[i].F + (f2[i].F - f1[i].F)*dx,
+                BW: f1[i].BW +(f2[i].BW - f1[i].BW)*dx,
+                G: f1[i].G + (f2[i].G - f1[i].G)*dx
             });
         }
 

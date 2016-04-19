@@ -19,9 +19,10 @@ angular.module('MathsFunctionSonification').directive('functionDisplay',function
 }).controller('functionDisplayCtrl',['subtractiveSynth','formantSynth','$scope','$element','$attrs',
     function(subtractiveSynth,formantSynthComponent,$scope,$element,$attr){
         var synth  = $scope.formant ? formantSynthComponent : subtractiveSynth;
-        $scope.loop=true;
+        $scope.loop=false;
         var fMax = 800;
         var fMin = 200;
+        $scope.selected = false;
 
         var sonify = $scope.sonify = !($scope.sonify == false);
 
@@ -60,6 +61,7 @@ angular.module('MathsFunctionSonification').directive('functionDisplay',function
             $scope.graph.on('mouseover', function () {
                 $scope.$parent.$broadcast('newPlay');
                 if(sonify) {
+                    $scope.selected=true;
                     synth.start();
                     synth.setNoteRange(fMax, fMin, axies.yMax, axies.yMin)
                 }
@@ -86,6 +88,7 @@ angular.module('MathsFunctionSonification').directive('functionDisplay',function
             synth.stop();
             synth  = $scope.formant ? formantSynthComponent : subtractiveSynth;
         });
+
 
 
         function setX(x){
@@ -188,10 +191,27 @@ angular.module('MathsFunctionSonification').directive('functionDisplay',function
 
         $scope.$on("$destroy", function handler() {
             $scope.stop();
+            $scope.selected = false;
         });
 
         $scope.$on('newPlay', function() {
             $scope.stop();
+            $scope.selected = false;
+        });
+
+        var previous = false;
+        Leap.loop(function(frame){
+            if($scope.selected) {
+                if (frame.pointables.length) {
+                    previous = true;
+                    var tool = frame.pointables[0];
+                    synth.start();
+                    setX(tool.stabilizedTipPosition[0] / 25);
+                } else if (previous) {
+                    previous = false;
+                    synth.stop();
+                }
+            }
         });
 
         updateOptions();
