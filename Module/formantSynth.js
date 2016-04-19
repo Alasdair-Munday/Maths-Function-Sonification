@@ -141,7 +141,7 @@ angular.module('MathsFunctionSonification').service('formantSynth',function(){
 
     c.sonifyValues = function(fx,dx,dx2){
         var f = getFormantForSlope(dx);
-        useFormant(f,dx2+0.5);
+        useFormant(f,Math.abs(dx2)+0.5);
         setFrequency( getPitch(fx));
         vib.frequency.value = dx2*2;
     };
