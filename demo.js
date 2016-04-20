@@ -16,6 +16,10 @@ angular.module('demo',['MathsFunctionSonification'])
 
     $scope.toggleOrientationSynth = function(){
         subtractiveSynth.toggle();
+        if(!window.AudioContext){
+            var ac = new webkitAudioContext();
+            ac.createOscillator().start();
+        }
     };
     $scope.orientation = {};
     
