@@ -36,9 +36,9 @@
         <script>
             var AudioContext = window.AudioContext || window.webkitAudioContext;
             var ctx = new AudioContext();
-            function startWebAudio(){
-                if(!AudioContext){
-                    var buffer = ctx.createBuffer(1,1,22050);
+            window.addEventListener('touchend',function() {
+                if (!AudioContext) {
+                    var buffer = ctx.createBuffer(1, 1, 22050);
                     var source = createBufferSource();
                     source.buffer = buffer;
 
@@ -46,7 +46,7 @@
 
                     source.start(0);
                 }
-            }
+            },false);
         </script>
         <h3>Playground</h3>
         <div class="col-sm-6 col-sm-offset-3">
