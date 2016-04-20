@@ -32,6 +32,18 @@
         <h1>{{orientation.beta.toFixed(2)}}</h1>
         <h1>{{orientation.gamma.toFixed(2)}}</h1>
         <button class="btn btn-primary" ng-click="toggleOrientationSynth()">toggle orientation synth</button>
+        <button class="btn btn-primary" onclick="startWebAudio()">toggle orientation synth</button>
+        <script>
+            function startWebAudio(){
+                if(!AudioContext){
+                    var ctx = new webkitAudioContext();
+                    var osc = ctx.createOscillator();
+                    osc.connect(ctx.destination);
+                    osc.start();
+                    osc.stop();
+                }
+            }
+        </script>
         <h3>Playground</h3>
         <div class="col-sm-6 col-sm-offset-3">
             <div class="input-group ">
