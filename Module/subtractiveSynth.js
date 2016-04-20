@@ -11,7 +11,7 @@ angular.module('MathsFunctionSonification').service('subtractiveSynth', function
     c.fxSemitoneRatio = 24/2;
 
 
-    c.panner = audioContext.createStereoPanner();
+
     c.osc1 =  audioContext.createOscillator();
     c.osc2 = audioContext.createOscillator();
     c.amp = audioContext.createGain();
@@ -60,8 +60,14 @@ angular.module('MathsFunctionSonification').service('subtractiveSynth', function
     subAmp.connect(c.amp);
 
     c.filter.connect(c.amp);
-    c.amp.connect(c.panner);
-    c.panner.connect(audioContext.destination);
+
+    if(audioContext.createStereoPanner) {
+        c.panner = audioContext.createStereoPanner();
+        c.amp.connect(c.panner);
+        c.panner.connect(audioContext.destination);
+    }else{
+        c.amp.connect(audioContext.destination)
+    }
 
 
     c.setNoteRange = function(fMax,fMin,yMax,yMin){
@@ -107,7 +113,14 @@ angular.module('MathsFunctionSonification').service('subtractiveSynth', function
     c.toggle = function(){
         c.amp.gain.value = playing? 0:1;
         playing = ! playing;
-    }
+    };
+
+    c.pan = function(x){
+        if(c.panner)
+            c.panner.pan.value = x;
+    };
+
+
 
     return c;
 });

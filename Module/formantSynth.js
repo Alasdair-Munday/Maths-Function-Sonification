@@ -39,10 +39,15 @@ angular.module('MathsFunctionSonification').service('formantSynth',function(){
     output = context.createGain();
     output.gain.value = 0;
 
-    c.panner = context.createStereoPanner();
+    if(context.createStereoPanner) {
+        c.panner = context.createStereoPanner();
+        output.connect(c.panner);
+        c.panner.connect(context.destination);
+    }else{
+        output.connect(context.destination)
+    }
 
-    output.connect(c.panner);
-    c.panner.connect(context.destination);
+
 
     sub = context.createOscillator();
     var osc = context.createOscillator();
@@ -61,7 +66,7 @@ angular.module('MathsFunctionSonification').service('formantSynth',function(){
     vib = context.createOscillator();
     vibGain = context.createGain();
     vib.connect(vibGain);
-    //vibGain.connect(source.detune);
+    vibGain.connect(source.detune);
     vibGain.gain.value = 40;
     vib.start();
 
@@ -97,6 +102,11 @@ angular.module('MathsFunctionSonification').service('formantSynth',function(){
 
         }
     }
+
+    c.pan = function(x){
+        if(c.panner)
+            c.panner.pan.value = x;
+    };
 
     c.start = function () {
         output.gain.value = 1;

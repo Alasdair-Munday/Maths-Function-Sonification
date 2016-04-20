@@ -12,7 +12,11 @@ angular.module('demo',['MathsFunctionSonification'])
 
     $scope.toggleFormant = function(){
         $scope.formant = !$scope.formant;
-    }
+    };
+
+    $scope.toggleOrientationSynth = function(){
+        subtractiveSynth.toggle();
+    };
     $scope.orientation = {};
     
     var iOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
@@ -26,6 +30,7 @@ angular.module('demo',['MathsFunctionSonification'])
               $scope.orientation.alpha    = event.alpha;
               $scope.orientation.beta     = event.beta;
               $scope.orientation.gamma   = event.gamma;
+                subtractiveSynth.sonifyValues(event.alpha/360, event.beta/90, event.gamma/90);
             });
         
           // Do stuff with the new orientation data
