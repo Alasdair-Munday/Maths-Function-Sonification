@@ -93,18 +93,19 @@ angular.module('MathsFunctionSonification').directive('functionDisplay',function
 
         function setX(x){
             playhead = x;
+            var h = 0.001;
             var yVal = Parser.evaluate(eqnString, { x: x  });
-            var deltaY = Parser.evaluate(eqnString, {x: x+0.001});
-            var thirdY = Parser.evaluate(eqnString, {x: x+0.002});
+            var deltaY = Parser.evaluate(eqnString, {x: x+h});
+            var thirdY = Parser.evaluate(eqnString, {x: x-h});
 
-            var firstDerivativeVal = (deltaY - yVal)/ 0.001;
-            var deltafirstDerivative = (thirdY - deltaY)/0.001;
-            var secondDerivativeVal = ( deltafirstDerivative - firstDerivativeVal)/ 0.001;
-            options.annotations = [{x:x}];
+            var firstDerivativeVal = (deltaY - yVal)/ h;
+            var deltafirstDerivative = (yVal - thirdY)/h;
+            var secondDerivativeVal = ( deltafirstDerivative - firstDerivativeVal)/ h;
+            options.annotations = [{x:x, color:"#000000"}];
             functionPlot(options);
 
             synth.sonifyValues(yVal,firstDerivativeVal,secondDerivativeVal);
-            synth.panner.pan.value = (x)/axies.xMax;
+            synth.pan((x)/axies.xMax);
 
             if($scope.output) {
                 $scope.$apply(function () {
