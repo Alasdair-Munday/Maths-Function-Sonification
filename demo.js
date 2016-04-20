@@ -15,16 +15,27 @@ angular.module('demo',['MathsFunctionSonification'])
     }
     $scope.orientation = {};
     
-    window.addEventListener("deviceorientation", handleOrientation, true);
+    var iOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
     
-    function handleOrientation(event) {
-        $scope.$apply(function(){
-          $scope.orientation.absolute = event.absolute;
-          $scope.orientation.alpha    = event.alpha;
-          $scope.orientation.beta     = event.beta;
-          $scope.orientation.gamma   = event.gamma;
-        });
-    
-      // Do stuff with the new orientation data
+    if(!iOS){
+        window.addEventListener("deviceorientation", handleOrientation, true);
+        
+        function handleOrientation(event) {
+            $scope.$apply(function(){
+              $scope.orientation.absolute = event.absolute;
+              $scope.orientation.alpha    = event.alpha;
+              $scope.orientation.beta     = event.beta;
+              $scope.orientation.gamma   = event.gamma;
+            });
+        
+          // Do stuff with the new orientation data
+        }
+    }else{
+        window.onorientationchange = readDeviceOrientation
+        
+        function readDeviceOrientation (){
+            $scope.orientation.alpha = window.orientation;
+        }
+    }
     }
 }]);
