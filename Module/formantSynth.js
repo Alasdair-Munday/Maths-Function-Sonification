@@ -19,7 +19,7 @@ angular.module('MathsFunctionSonification').service('formantSynth',function(){
     var letters = Object.keys(formants);
 
     //get the web audio context
-    var context = new (window.AudioContext || window.webkitAudioContext)();
+    var context = ctx || new (window.AudioContext || window.webkitAudioContext)();
 
     var source;
     var sub;

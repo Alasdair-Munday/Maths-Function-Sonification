@@ -32,15 +32,19 @@
         <h1>{{orientation.beta.toFixed(2)}}</h1>
         <h1>{{orientation.gamma.toFixed(2)}}</h1>
         <button class="btn btn-primary" ng-click="toggleOrientationSynth()">toggle orientation synth</button>
-        <button class="btn btn-primary" onclick="startWebAudio()">toggle orientation synth</button>
+        <button class="btn btn-primary" onclick="startWebAudio()">ios turn on audio</button>
         <script>
+            var AudioContext = window.AudioContext || window.webkitAudioContext;
+            var ctx = new AudioContext();
             function startWebAudio(){
                 if(!AudioContext){
-                    var ctx = new webkitAudioContext();
-                    var osc = ctx.createOscillator();
-                    osc.connect(ctx.destination);
-                    osc.start();
-                    osc.stop();
+                    var buffer = ctx.createBuffer(1,1,22050);
+                    var source = createBufferSource();
+                    source.buffer = buffer;
+
+                    source.connect(ctx.destination);
+
+                    source.start(0);
                 }
             }
         </script>

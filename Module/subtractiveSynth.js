@@ -2,8 +2,9 @@
  * Created by Alasdair Munday on 17/04/2016.
  */
 angular.module('MathsFunctionSonification').service('subtractiveSynth', function () {
-    var AudioContext = window.AudioContext || window.webkitAudioContext;
-    var audioContext = new AudioContext();
+
+    var audioContext =  ctx || new (window.AudioContext || window.webkitAudioContext)();
+
     var playing = false;
     var c = {};
 
