@@ -36,15 +36,17 @@
         <script>
             var AudioContext = window.AudioContext || window.webkitAudioContext;
             var ctx = new AudioContext();
+            var trigged = false;
             window.addEventListener('touchend',function() {
-                if (!AudioContext) {
+                if(!trigged) {
                     var buffer = ctx.createBuffer(1, 1, 22050);
-                    var source = createBufferSource();
+                    var source = ctx.createBufferSource();
                     source.buffer = buffer;
 
                     source.connect(ctx.destination);
 
                     source.start(0);
+                    trigged = true;
                 }
             },false);
         </script>
