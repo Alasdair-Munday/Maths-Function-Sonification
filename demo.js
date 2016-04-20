@@ -37,5 +37,4 @@ angular.module('demo',['MathsFunctionSonification'])
             $scope.orientation.alpha = window.orientation;
         }
     }
-    }
 }]);
