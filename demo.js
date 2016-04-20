@@ -18,12 +18,12 @@ angular.module('demo',['MathsFunctionSonification'])
     window.addEventListener("deviceorientation", handleOrientation, true);
     
     function handleOrientation(event) {
-        $scope.$apply(){
+        $scope.$apply(function(){
           $scope.orientation.absolute = event.absolute;
           $scope.orientation.alpha    = event.alpha;
           $scope.orientation.beta     = event.beta;
           $scope.orientation.gamma   = event.gamma;
-        }
+        });
     
       // Do stuff with the new orientation data
     }
