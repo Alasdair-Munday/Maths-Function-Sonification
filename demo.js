@@ -14,8 +14,10 @@ angular.module('demo',['MathsFunctionSonification'])
         $scope.formant = !$scope.formant;
     };
 
+    var orientation = false;
     $scope.toggleOrientationSynth = function(){
         subtractiveSynth.toggle();
+        orientation = !orientation
     };
     $scope.orientation = {};
     

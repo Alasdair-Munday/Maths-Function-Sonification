@@ -99,8 +99,7 @@ angular.module('MathsFunctionSonification').directive('functionDisplay',function
             var thirdY = Parser.evaluate(eqnString, {x: x-h});
 
             var firstDerivativeVal = (deltaY - yVal)/ h;
-            var deltafirstDerivative = (yVal - thirdY)/h;
-            var secondDerivativeVal = ( deltafirstDerivative - firstDerivativeVal)/ h;
+            var secondDerivativeVal = ( deltaY - 2*yVal + thirdY)/ Math.pow(h,2);
             options.annotations = [{x:x, color:"#000000"}];
             functionPlot(options);
 
