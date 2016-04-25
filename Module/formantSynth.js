@@ -32,7 +32,7 @@ angular.module('MathsFunctionSonification').service('formantSynth',function(){
 
     var c = {};
 
-    c.fMin = 200;
+    c.fCentre = 200;
     c.fxSemitoneRatio = 24/2;
 
     //gain node for routing to output
@@ -52,7 +52,7 @@ angular.module('MathsFunctionSonification').service('formantSynth',function(){
     sub = context.createOscillator();
     var osc = context.createOscillator();
     osc.type = 'sawtooth';
-    sub.frequency.value = osc.frequency.value = c.fMin;
+    sub.frequency.value = osc.frequency.value = c.fCentre;
     osc.start();
     sub.start();
 
@@ -124,10 +124,9 @@ angular.module('MathsFunctionSonification').service('formantSynth',function(){
     };
 
     c.setNoteRange = function(fMax,fMin,yMax,yMin){
-        c.fMin = fMin/2;
 
-        fMax = fMax/2;
-        fMin = fMin/2;
+        //TODO this is a hack but Formants work better an octave lower
+        c.fCentre = fMin;
 
         var semitones = 12*Math.log2(fMax/fMin);
 
@@ -137,10 +136,9 @@ angular.module('MathsFunctionSonification').service('formantSynth',function(){
     };
 
     function getPitch(fx){
-
         var n = fx* c.fxSemitoneRatio;
-
-        return Math.pow(2,n/12)* c.fMin;
+        var f = Math.pow(2,n/12)* c.fCentre;
+        return f;
     }
 
     //methods

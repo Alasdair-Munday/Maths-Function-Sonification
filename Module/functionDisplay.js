@@ -20,8 +20,8 @@ angular.module('MathsFunctionSonification').directive('functionDisplay',function
     function(subtractiveSynth,formantSynthComponent,$scope,$element,$attr){
         var synth  = $scope.formant ? formantSynthComponent : subtractiveSynth;
         $scope.loop=false;
-        var fMax = 800;
-        var fMin = 200;
+        var fMax = 400;
+        var fMin = 100;
         $scope.selected = false;
 
         var sonify = $scope.sonify = !($scope.sonify == false);
@@ -160,7 +160,7 @@ angular.module('MathsFunctionSonification').directive('functionDisplay',function
             $scope.$parent.$broadcast('newPlay');
             playId = setInterval(nextFrame,1/(sampleRate*1000));
             synth.start();
-            synth.setNoteRange(fMax,fMin,axies.yMax,axies.yMin);
+            synth.setNoteRange(fMax,fCentre,axies.yMax,axies.yMin);
 
         };
         $scope.pause = function(){

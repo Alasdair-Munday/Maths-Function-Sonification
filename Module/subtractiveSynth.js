@@ -8,7 +8,7 @@ angular.module('MathsFunctionSonification').service('subtractiveSynth', function
     var playing = false;
     var c = {};
 
-    c.fMin = 200;
+    c.fCentre = 200;
     c.fxSemitoneRatio = 24/2;
 
 
@@ -72,19 +72,24 @@ angular.module('MathsFunctionSonification').service('subtractiveSynth', function
 
 
     c.setNoteRange = function(fMax,fMin,yMax,yMin){
-        c.fMin = fMin;
+        c.fCentre = (fMin + fMax) /2;
+        //the number of semitones between the minimum and maximum frequency values
         var semitones = 12*Math.log2(fMax/fMin);
 
+        //get the difference between the top and bottom of the graph.
         var yRange = yMax - yMin;
 
+        //The ratio between semitones and integers in the y range
         c.fxSemitoneRatio = semitones/yRange;
     };
 
     c.getPitch = function(fx){
 
+        //find how many semitones above the minimum
         var n = fx* c.fxSemitoneRatio;
 
-        return Math.pow(2,n/12)* c.fMin;
+        var f = Math.pow(2,n/12)* c.fCentre;
+        return  f;
     };
 
     //methods
