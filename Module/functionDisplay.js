@@ -11,7 +11,8 @@ angular.module('MathsFunctionSonification').directive('functionDisplay',function
             xRange: '=rangeX',
             output: '=?',
             sonify: '=?',
-            formant: '=?'
+            formant: '=?',
+            tiltControl: '=?'
 
         },
         controller:'functionDisplayCtrl'
@@ -158,9 +159,10 @@ angular.module('MathsFunctionSonification').directive('functionDisplay',function
         var reverse = false;
         $scope.play = function(){
             $scope.$parent.$broadcast('newPlay');
+            $scope.selected = true;
             playId = setInterval(nextFrame,1/(sampleRate*1000));
             synth.start();
-            synth.setNoteRange(fMax,fCentre,axies.yMax,axies.yMin);
+            synth.setNoteRange(fMax,fMin,axies.yMax,axies.yMin);
 
         };
         $scope.pause = function(){
@@ -198,6 +200,15 @@ angular.module('MathsFunctionSonification').directive('functionDisplay',function
             $scope.stop();
             $scope.selected = false;
         });
+
+        //tilt control
+        window.addEventListener("deviceorientation", handleOrientation, true);
+
+        function handleOrientation(event){
+            if($scope.selected && $scope.tiltControl){
+                playtime = 2 + (event.beta+10)/10;
+            }
+        }
 
         var previous = false;
         Leap.loop(function(frame){
