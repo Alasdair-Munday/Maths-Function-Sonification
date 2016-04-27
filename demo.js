@@ -28,7 +28,7 @@ angular.module('demo',['MathsFunctionSonification'])
     function handleOrientation(event){
         if($scope.tiltControl){
             $scope.$apply(function(){
-                $scope.playrate = 50 - event.beta+10;
+                $scope.playrate = 50 + event.gamma+10;
             });
         }
     }
