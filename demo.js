@@ -14,18 +14,22 @@ angular.module('demo',['MathsFunctionSonification'])
     $scope.toggleFormant = function(){
         $scope.formant = !$scope.formant;
     };
-    
 
-    //window.addEventListener("deviceorientation", handleOrientation, true);
 
-    //function handleOrientation(event) {
-    //    $scope.$apply(function(){
-    //      $scope.orientation.absolute = event.absolute;
-    //      $scope.orientation.alpha    = event.alpha;
-    //      $scope.orientation.beta     = event.beta;
-    //      $scope.orientation.gamma   = event.gamma;
-    //    });
-    //
-    //  // Do stuff with the new orientation data
-    //}
+
+    $scope.playtime = 2;
+    $scope.playrate= (1/$scope.playtime)*100;
+    $scope.$watch('playrate',function(){
+        $scope.playtime= 1/($scope.playrate/100);
+    });
+
+    //tilt control
+    window.addEventListener("deviceorientation", handleOrientation, true);
+    function handleOrientation(event){
+        if($scope.tiltControl){
+            $scope.$apply(function(){
+                $scope.playrate = 50 - event.beta+10;
+            });
+        }
+    }
 }]);
