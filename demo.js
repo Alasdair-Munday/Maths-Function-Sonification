@@ -6,6 +6,7 @@ angular.module('demo',['MathsFunctionSonification'])
     $scope.playgroundEquation = "tanh(2*sin(x))/tanh(5)";
     $scope.playgroundOut = {};
     $scope.formant = true;
+    $scope.tiltControl = false;
 
     $scope.xRange = 16;
     $scope.yRange = 4;
@@ -13,26 +14,18 @@ angular.module('demo',['MathsFunctionSonification'])
     $scope.toggleFormant = function(){
         $scope.formant = !$scope.formant;
     };
-
-    var orientation = false;
-    $scope.toggleOrientationSynth = function(){
-        subtractiveSynth.toggle();
-        orientation = !orientation
-    };
-    $scope.orientation = {};
     
 
-    window.addEventListener("deviceorientation", handleOrientation, true);
+    //window.addEventListener("deviceorientation", handleOrientation, true);
 
-    function handleOrientation(event) {
-        $scope.$apply(function(){
-          $scope.orientation.absolute = event.absolute;
-          $scope.orientation.alpha    = event.alpha;
-          $scope.orientation.beta     = event.beta;
-          $scope.orientation.gamma   = event.gamma;
-            subtractiveSynth.sonifyValues(event.alpha/360, event.beta/90, event.gamma/90);
-        });
-
-      // Do stuff with the new orientation data
-    }
+    //function handleOrientation(event) {
+    //    $scope.$apply(function(){
+    //      $scope.orientation.absolute = event.absolute;
+    //      $scope.orientation.alpha    = event.alpha;
+    //      $scope.orientation.beta     = event.beta;
+    //      $scope.orientation.gamma   = event.gamma;
+    //    });
+    //
+    //  // Do stuff with the new orientation data
+    //}
 }]);

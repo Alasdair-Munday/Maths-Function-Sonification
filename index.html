@@ -59,29 +59,26 @@
         <div class="col-sm-12">
             <div class="col-sm-2">
                 <div class="col-sm-12">
-                    <radial-gauge value="playgroundOut.x" min="0" max="5" label="'X'"></radial-gauge>
+                    <radial-gauge value="playgroundOut.x" min="0" max="xRange/4" label="'X'"></radial-gauge>
                     <input type="range" ng-model="xRange" min="1" max ="20"> {{xRange/4}}
                 </div>
                 <div class="col-sm-12">
-                    <radial-gauge value="playgroundOut.y" min="0" max="1" label="'Y'"></radial-gauge>
+                    <radial-gauge value="playgroundOut.y" min="0" max="yRange/4" label="'Y'"></radial-gauge>
                     <input type="range" ng-model="yRange" min="1" max ="20"> {{yRange/4}}
                 </div>
             </div>
             <div class="col-sm-8">
-                <function-display range-y="yRange/4" range-x="xRange/4" id="playgroundFunction" sonify="true" formant="formant" equation-string="playgroundEquation" output="playgroundOut"></function-display>
+                <function-display tilt-control="tiltControl" range-y="yRange/4" range-x="xRange/4" id="playgroundFunction" sonify="true" formant="formant" equation-string="playgroundEquation" output="playgroundOut"></function-display>
             </div>
             <div class="col-sm-2">
                 <radial-gauge value="playgroundOut.firstDerivative" min="0" max="10" label="'Slope'"></radial-gauge>
                 <radial-gauge value="playgroundOut.secondDerivative" min="0" max="10" label="'Curve'"></radial-gauge>
             </div>
         </div>
-    </div>
-    <div class="col-sm-12">
-        <h1>{{orientation.alpha.toFixed(2)}}</h1>
-        <h1>{{orientation.beta.toFixed(2)}}</h1>
-        <h1>{{orientation.gamma.toFixed(2)}}</h1>
-        <button class="btn btn-primary" ng-click="toggleOrientationSynth()">toggle orientation synth</button>
-        <button class="btn btn-primary" onclick="startWebAudio()">ios turn on audio</button>
+
+        <div class="col-sm-12">
+            <button class="btn btn-primary" ng-click="tiltControl = !tiltControl">{{tiltControl ? "Turn off tilt control":"Turn on tilt control"}}</button>
+        </div>
     </div>
 
 </body>
