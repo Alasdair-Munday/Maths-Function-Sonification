@@ -12,7 +12,8 @@ angular.module('MathsFunctionSonification').directive('functionDisplay',function
             output: '=?',
             sonify: '=?',
             formant: '=?',
-            tiltControl: '=?'
+            tiltControl: '=?',
+            playTime: '=?'
 
         },
         controller:'functionDisplayCtrl'
@@ -24,6 +25,8 @@ angular.module('MathsFunctionSonification').directive('functionDisplay',function
         var fMax = 400;
         var fMin = 100;
         $scope.selected = false;
+
+        $scope.playTime = $scope.playTime | 10;
 
         var sonify = $scope.sonify = !($scope.sonify == false);
 
@@ -154,7 +157,6 @@ angular.module('MathsFunctionSonification').directive('functionDisplay',function
 
         var playhead = axies.xMin;
         var playId = null;
-        var playtime = 10;
         var sampleRate = 20;
         var reverse = false;
         $scope.play = function(){
@@ -187,7 +189,7 @@ angular.module('MathsFunctionSonification').directive('functionDisplay',function
                 $scope.loop ? $scope.reset(): $scope.stop();
 
             setX(playhead);
-            playhead += (axies.xMax - axies.xMin)/(sampleRate*playtime);
+            playhead += (axies.xMax - axies.xMin)/(sampleRate*$scope.playTime);
         }
 
 
@@ -201,14 +203,7 @@ angular.module('MathsFunctionSonification').directive('functionDisplay',function
             $scope.selected = false;
         });
 
-        //tilt control
-        window.addEventListener("deviceorientation", handleOrientation, true);
 
-        function handleOrientation(event){
-            if($scope.selected && $scope.tiltControl){
-                playtime = 2 + (event.beta+10)/10;
-            }
-        }
 
         var previous = false;
         Leap.loop(function(frame){
